@@ -20,6 +20,12 @@ app.use(express.json());
 // routing
 app.use(require("./router/auth"));
 
+// load data
+app.use(require("./router/load"));
+
+// send comment
+app.use(require("./router/comment"));
+
 
 // connecting nodejs
 app.listen(PORT, () => {
