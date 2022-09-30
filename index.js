@@ -1,6 +1,6 @@
 // creating the dotenv
 const dotenv = require("dotenv");
-dotenv.config({path: './config.env'});
+dotenv.config({ path: "./config.env" });
 
 // defining the port
 const PORT = process.env.PORT;
@@ -9,8 +9,18 @@ const PORT = process.env.PORT;
 const express = require("express");
 const app = express();
 
+// using cookie parser
+const cookieParser = require("cookie-parser");
+app.use(cookieParser());
+
+// importing cors
 const cors = require("cors");
-app.use(cors());
+app.use(
+    cors({
+        origin: "http://localhost:3000",
+        credentials: true,
+    })
+);
 
 // initiating the request to connect to mongoose
 require("./db/conn");
@@ -23,11 +33,13 @@ app.use(require("./router/auth"));
 // load data
 app.use(require("./router/load"));
 
+// add items to user cart
+app.use(require("./router/cart"));
+
 // send comment
 app.use(require("./router/comment"));
-
 
 // connecting nodejs
 app.listen(PORT, () => {
     console.log(`Server Running on port ${PORT}`);
-})
+});
