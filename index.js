@@ -16,10 +16,10 @@ app.use(cookieParser());
 // importing cors
 const cors = require("cors");
 app.use(
-    cors({
-        origin: "http://localhost:3000",
-        credentials: true,
-    })
+	cors({
+		origin: ["http://localhost:3000", "http://localhost:3001"],
+		credentials: true,
+	})
 );
 
 // initiating the request to connect to mongoose
@@ -41,5 +41,5 @@ app.use(require("./router/comment"));
 
 // connecting nodejs
 app.listen(PORT, () => {
-    console.log(`Server Running on port ${PORT}`);
+	console.log(`Server Running on port ${PORT}`);
 });
