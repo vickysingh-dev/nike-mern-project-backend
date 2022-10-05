@@ -3,8 +3,6 @@ const router = express.Router();
 
 const { Product } = require("../model/productSchema");
 
-const userAuthenticate = require("../middleware/userAuth");
-
 // route to fetch data according to the category and for a given _id
 router.post("/load", async (req, res) => {
     const { category, _id } = req.body;
@@ -12,7 +10,6 @@ router.post("/load", async (req, res) => {
     try {
         if (_id) {
             const items = await Product.findOne({ _id });
-            console.log(items);
             return res.status(200).json(items);
         } else if (category) {
             const items = await Product.find({ category });

@@ -19,18 +19,23 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: () => new Date(),
     },
-    // tokens: [
-    //     {
-    //         token: {
-    //             type: String,
-    //             required: true,
-    //         },
-    //     },
-    // ],
     cart: [
         {
             _id: {
-                type: Object,
+                type: String,
+            },
+            size: {
+                type: String,
+            },
+            quantity: {
+                type: Number,
+            },
+        },
+    ],
+    order: [
+        {
+            _id: {
+                type: String,
             },
             size: {
                 type: String,
@@ -56,8 +61,6 @@ userSchema.pre("save", async function (next) {
 userSchema.methods.generateAuthToken = async function () {
     try {
         let token = jwt.sign({ _id: this._id }, process.env.SECRET_KEY);
-        // this.tokens = this.tokens.concat({ token: token });
-        // await this.save();
         return token;
     } catch (err) {
         console.log(err);
@@ -82,6 +85,39 @@ userSchema.methods.addToCart = async function (item_id, size) {
     } catch (err) {
         console.log(err);
         console.log("Error while adding data to cart");
+    }
+};
+
+userSchema.methods.updateCart = async function (item_id, quantity) {
+    try {
+        if (quantity < 1) {
+            this.cart = this.cart.filter((value) => {
+                return value._id != item_id;
+            });
+            await this.save();
+        } else {
+            this.cart.forEach((value) => {
+                if (value._id == item_id) {
+                    value.quantity = quantity;
+                }
+            });
+            await this.save();
+        }
+        return this.cart;
+    } catch (err) {
+        console.log(err);
+        console.log("Error while updating the change of quantit request.");
+    }
+};
+
+userSchema.methods.checkout = async function () {
+    try {
+        this.order = this.cart;
+        this.cart = [];
+        await this.save();
+        return this;
+    } catch (err) {
+        console.log(err);
     }
 };
 
