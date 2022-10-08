@@ -18,7 +18,9 @@ router.post("/comment", async (req, res) => {
         Team Nike`,
     };
 
-    const emailValid = sendEmail(newUser);
+    const emailValid = await sendEmail(newUser);
+
+    console.log("The email Valid value is ==> ", emailValid);
 
     if (emailValid) {
         try {
