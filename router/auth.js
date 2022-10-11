@@ -11,11 +11,6 @@ const userAuthenticate = require("../middleware/userAuth");
 
 const sendEmail = require("../middleware/sendEmail");
 
-router.get("/", (req, res) => {
-    console.log("Hello World");
-    res.json({ message: "All Working Fine!" });
-});
-
 // router to sign up a new user.
 
 router.post("/signup", async (req, res) => {
@@ -48,7 +43,6 @@ router.post("/signup", async (req, res) => {
         if (emailValid) {
             const user = new User({ name, email, password });
             await user.save();
-            console.log("User Saved");
 
             return res
                 .status(200)
@@ -95,6 +89,7 @@ router.post("/signin", async (req, res) => {
     }
 });
 
+// router to sign out the user
 router.get("/signout", (req, res) => {
     res.clearCookie("jwtoken");
     res.status(200).send({ cookieCleared: true });
@@ -104,21 +99,27 @@ router.get("/signout", (req, res) => {
 router.get("/cart", userAuthenticate, async (req, res) => {
     if (req.flag == true) {
         let cartItems = {};
-        console.log(req.rootUser.cart);
         req.rootUser.cart.forEach((item) => {
             cartItems[item._id] = item;
         });
-        // console.log(cartItems);
-        let items = await Product.find({
+        let _items = await Product.find({
             _id: Object.keys(cartItems),
         });
-        // console.log(items);
-        items = items.map((item) => {
-            item = item.toJSON();
-            let response = { ...item, ...cartItems[item._id] };
+        // _items = _items.map((item) => {
+        //     item = item.toJSON();
+        //     let response = { ...item, ...cartItems[item._id] };
+        //     return response;
+        // });
+        let items = req.rootUser.cart.map((item) => {
+            let response;
+            _items.forEach((element) => {
+                element = element.toJSON();
+                if (item._id == element._id) {
+                    response = { ...element, ...item };
+                }
+            });
             return response;
         });
-        // console.log(items);
         res.status(200).send({
             items,
             userName: req.rootUser.name,

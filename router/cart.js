@@ -36,6 +36,22 @@ router.post("/addItem", userAuthenticate, async (req, res) => {
     }
 });
 
+router.get("/clearCart", userAuthenticate, async (req, res) => {
+    if (req.flag == true) {
+        const user_id = req.rootUser._id;
+        try {
+            const userDetails = await User.findOne({ _id: user_id });
+            userDetails.cart = [];
+            await userDetails.save();
+            return res.status(200).send({ msg: "Cart Cleared!" });
+        } catch (err) {
+            return res.status(500).send({ msg: "Internal Server Error" });
+        }
+    } else {
+        return res.status(400).send({ msg: "User Not Authorized!" });
+    }
+});
+
 router.post("/updateItem", userAuthenticate, async (req, res) => {
     if (req.flag == true) {
         const query = req.body;
@@ -47,7 +63,8 @@ router.post("/updateItem", userAuthenticate, async (req, res) => {
                 const item = await User.findOne({ _id: user_id });
                 const result = await item.updateCart(
                     query.item_id,
-                    query.quantity
+                    query.quantity,
+                    query.size
                 );
                 return res.status(200).send(result);
             } catch (err) {
@@ -92,27 +109,5 @@ router.get("/checkout", userAuthenticate, async (req, res) => {
         return res.status(400).send({ msg: "User Not Authorized" });
     }
 });
-
-// router.post("/getItems", async (req, res) => {
-//     const query = req.body;
-//     console.log("the query is ", query);
-//     if (query.length == 0) {
-//         return res.status(201).send({ msg: "Your Cart Is Empty" });
-//     } else {
-//         try {
-//             const items = await Promise.all(
-//                 query.map(async (ele) => {
-//                     const item = await Product.findOne({ _id: ele._id });
-//                     return item;
-//                 })
-//             );
-//             console.log("Console log of getItems ", items);
-//             res.status(200).send(items);
-//         } catch (err) {
-//             console.log(err);
-//             res.status(500).send({ msg: "Internal Server Error" });
-//         }
-//     }
-// });
 
 module.exports = router;

@@ -15,6 +15,9 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    otp: {
+        type: String,
+    },
     dateCreated: {
         type: Date,
         default: () => new Date(),
@@ -72,7 +75,6 @@ userSchema.methods.addToCart = async function (item_id, size) {
         let save;
         this.cart.forEach((element) => {
             if (element._id == item_id && element.size == size) {
-                console.log("Item found in the cart");
                 save = false;
             }
         });
@@ -88,7 +90,7 @@ userSchema.methods.addToCart = async function (item_id, size) {
     }
 };
 
-userSchema.methods.updateCart = async function (item_id, quantity) {
+userSchema.methods.updateCart = async function (item_id, quantity, size) {
     try {
         if (quantity < 1) {
             this.cart = this.cart.filter((value) => {
@@ -97,7 +99,7 @@ userSchema.methods.updateCart = async function (item_id, quantity) {
             await this.save();
         } else {
             this.cart.forEach((value) => {
-                if (value._id == item_id) {
+                if (value._id == item_id && value.size == size) {
                     value.quantity = quantity;
                 }
             });

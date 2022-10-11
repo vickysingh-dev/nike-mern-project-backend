@@ -20,20 +20,4 @@ router.post("/load", async (req, res) => {
     }
 });
 
-// route used to upload items to the database
-// router.post("/productUpload", async (req, res) => {
-//     const { name, price, image } = req.body;
-//     if (!name || !price || !image) {
-//         return res.status(400).send({ error: "Incomplete Credential" });
-//     }
-//     try {
-//         const product = new Product({ name, price, image });
-//         await product.save();
-//         console.log("Product Uploaded");
-//         res.status(200).json({ msg: "Product Saved Successfully" });
-//     } catch (err) {
-//         console.log(err);
-//     }
-// });
-
 module.exports = router;

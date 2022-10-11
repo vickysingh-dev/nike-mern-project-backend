@@ -11,7 +11,7 @@ router.post("/comment", async (req, res) => {
         email: email,
         subject: "Thank You, for sharing your concern.",
         text: `Your Comment 
-        '${comment}'
+        '   ${comment}  '
         has been sent successfully. Our executives, are looking in the matter. We will notify you as soon,
         as we get a fix for you. Your patience is highly appreciated.
         Regards,
@@ -19,8 +19,6 @@ router.post("/comment", async (req, res) => {
     };
 
     const emailValid = await sendEmail(newUser);
-
-    console.log("The email Valid value is ==> ", emailValid);
 
     if (emailValid) {
         try {
@@ -30,8 +28,6 @@ router.post("/comment", async (req, res) => {
                 comment,
             });
             await comm.save();
-
-            console.log("Comment Saved");
 
             res.status(200).json({
                 message: "Comment Uploaded!",
