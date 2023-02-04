@@ -3,7 +3,7 @@ const dotenv = require("dotenv");
 dotenv.config({ path: "./config.env" });
 
 // defining the port
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3000;
 
 // importing the  express module
 const express = require("express");
@@ -17,7 +17,7 @@ app.use(cookieParser());
 const cors = require("cors");
 app.use(
     cors({
-        origin: ["http://localhost:3000", "http://localhost:3001"],
+        origin: "*",
         credentials: true,
     })
 );

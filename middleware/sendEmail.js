@@ -27,6 +27,7 @@ const sendEmail = async ({ email, subject, text }) => {
                 resolve(false);
             } else {
                 resolve(true);
+                console.log("Email sent successfully!");
             }
         });
     });
