@@ -25,6 +25,10 @@ app.use(
 // initiating the request to connect to mongoose
 require("./db/conn");
 
+app.get("/testing", (req, res) => {
+    res.send("hello world");
+});
+
 app.use(express.json());
 
 // routing
